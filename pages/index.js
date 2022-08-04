@@ -1,6 +1,6 @@
 import Head from 'next/head';
 
-import { getFeaturedEvents } from '../../9.-Project-Time-API-Route/helpers/api-util';
+import { getFeaturedEvents } from '../helpers/api-util';
 import EventList from '../components/events/event-list';
 import NewsletterRegistration from '../components/input/newsletter-registration';
 
