@@ -5,15 +5,15 @@ function CommentList() {
     <ul className={classes.comments}>
       {/* Render list of comments - fetched from API */}
       <li>
-        <p>My comment is amazing!</p>
+        <p>This is good.</p>
         <div>
-          By <address>Maximilian</address>
+          By: <address>Sochea</address>
         </div>
       </li>
       <li>
-        <p>My comment is amazing!</p>
+        <p>So bad!</p>
         <div>
-          By <address>Maximilian</address>
+          By: <address>Rith</address>
         </div>
       </li>
     </ul>
