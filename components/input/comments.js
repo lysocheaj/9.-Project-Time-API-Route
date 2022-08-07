@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import CommentList from "./comment-list";
 import NewComment from "./new-comment";
@@ -6,40 +6,46 @@ import classes from "./comments.module.css";
 
 function Comments(props) {
   const { eventId } = props;
-  console.log("eventId", eventId);
-
+  
   const [showComments, setShowComments] = useState(false);
+  const [comments, setComments] = useState();
 
   function toggleCommentsHandler() {
     setShowComments((prevStatus) => !prevStatus);
   }
 
+  // show comments when it is available
+  useEffect(() => {
+    fetch("/api/comments/" + eventId)
+      .then((response) => response.json())
+      .then((data) => {
+        setComments(data.comments);
+      });
+  }, [showComments]);
+
   function addCommentHandler(commentData) {
     // send data to API
-    console.log("commentData", commentData);
-    try {
-      fetch("/api/comments/" + eventId, {
-        method: "POST",
-        body: JSON.stringify(commentData),
-        headers: {
-          "Content-Type": "application/json",
-          'Accept': 'application/json'
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => console.log("data", data));
-    } catch (e) {
-      console.log("exception", e.message);
-    }
+    fetch("/api/comments/" + eventId, {
+      method: "POST",
+      body: JSON.stringify(commentData),
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("data", data))
+      .catch((err) => console.log(err));
   }
 
+  console.log('comments', comments);
   return (
     <section className={classes.comments}>
       <button onClick={toggleCommentsHandler}>
         {showComments ? "Hide" : "Show"} Comments
       </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && <CommentList />}
+      {showComments && <CommentList items={comments} />}
     </section>
   );
 }
