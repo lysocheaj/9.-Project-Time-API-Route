@@ -1,12 +1,20 @@
-import { MongoClient } from "mongodb";
+import {
+  ConnectDatabase,
+  InsertDocument,
+  getAllDocuments,
+} from "../../../helpers/db-util";
 
 async function handler(req, res) {
   const { text, email, name } = req.body;
   const eventId = req.query.eventId;
 
-  const client = await MongoClient.connect(
-    "mongodb+srv://sochea:mjPOGEawydCfThTG@cluster0.daiqd60.mongodb.net/events?retryWrites=true&w=majority"
-  );
+  let client;
+  try {
+    client = await ConnectDatabase("events");
+  } catch {
+    res.status(500).json({ message: "Failed connecting to DB!" });
+    return;
+  }
 
   if (req.method === "POST") {
     if (
@@ -28,25 +36,28 @@ async function handler(req, res) {
       email,
     };
 
-    const db = client.db();
-    const result = await db.collection("comments").insertOne(newComments);
+    // insert data to DB
+    try {
+      const result = await InsertDocument(client, "comments", newComments);
+      newComments._id = result.insertedId;
 
-    newComments.id = result.insertedId;
-
-    console.log("newcomment", newComments);
-    res.status(201).json({ message: "added comments.", comment: newComments });
+      console.log("newcomment", newComments);
+      res
+        .status(201)
+        .json({ message: "added comments.", comment: newComments });
+    } catch {
+      res.status(500).json({ message: "Insert document failed!" });
+    }
   }
 
   if (req.method === "GET") {
-    const db = client.db();
-    const ducuments = await db
-      .collection("comments") // connect to db table
-      .find() // fetch all comments
-      .sort({ _id: -1 }) // sort as descending order
-      .toArray(); // and result to array
-
-    console.log("ducuments", ducuments);
-    res.status(200).json({ comments: ducuments });
+    try {
+      const ducuments = await getAllDocuments(client, "comments", { _id: -1 });
+      console.log("ducuments", ducuments);
+      res.status(200).json({ comments: ducuments });
+    } catch {
+      res.status(500).json({ message: "Failed fetching all comments!" });
+    }
   }
 
   client.close();

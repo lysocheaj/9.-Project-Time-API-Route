@@ -38,7 +38,7 @@ function Comments(props) {
       .catch((err) => console.log(err));
   }
 
-  console.log('comments', comments);
+  // if (comments) console.log('comments', comments);
   return (
     <section className={classes.comments}>
       <button onClick={toggleCommentsHandler}>
