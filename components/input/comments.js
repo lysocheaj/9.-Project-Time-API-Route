@@ -45,7 +45,7 @@ function Comments(props) {
         {showComments ? "Hide" : "Show"} Comments
       </button>
       {showComments && <NewComment onAddComment={addCommentHandler} />}
-      {showComments && <CommentList items={comments} />}
+      {showComments && <CommentList items={comments} eventid={eventId} />}
     </section>
   );
 }
