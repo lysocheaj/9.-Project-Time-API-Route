@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 
 import classes from './notification.module.css';
-// import NotificationContext from '../../store/notification-context';
+import NotificationContext from '../../store/notification-context';
 
 function Notification(props) {
-//   const notificationCtx = useContext(NotificationContext);
+  const notificationCtx = useContext(NotificationContext);
 
   const { title, message, status } = props;
 
@@ -19,7 +19,7 @@ function Notification(props) {
   }
 
   if (status === 'pending') {
-    statusClasses = classes.pending;
+    statusClasses = classes.pending; 
   }
 
   const activeClasses = `${classes.notification} ${statusClasses}`;
