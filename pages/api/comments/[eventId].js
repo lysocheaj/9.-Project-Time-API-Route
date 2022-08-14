@@ -54,7 +54,7 @@ async function handler(req, res) {
     try {
       const ducuments = await getAllDocuments(client, "comments", { _id: -1 });
       console.log("ducuments", ducuments);
-      
+
       res.status(200).json({ comments: ducuments });
     } catch {
       res.status(500).json({ message: "Failed fetching all comments!" });
